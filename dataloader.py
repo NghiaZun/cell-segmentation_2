@@ -39,7 +39,7 @@ class SartoriusDataset(Dataset):
         for _, row in records.iterrows():
             mask = self.rle_decode(row['annotation'])
             masks.append(mask)
-            labels.append(row['class'])  # class: 'shsy5y', 'astro', 'cort'
+            labels.append(row['cell_type'])  # class: 'shsy5y', 'astro', 'cort'
 
         masks = np.stack(masks, axis=0) if masks else np.zeros((0, 520, 704), dtype=np.uint8)
 
