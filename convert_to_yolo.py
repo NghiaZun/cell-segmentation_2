@@ -43,7 +43,7 @@ def convert(csv_path, label_dir):
             if bbox is None:
                 continue
             x_center, y_center, w, h = bbox_to_yolo(bbox, mask.shape)
-            class_id = CLASS_MAP[row['class']]
+            class_id = CLASS_MAP[row['cell_type']]
             lines.append(f"{class_id} {x_center:.6f} {y_center:.6f} {w:.6f} {h:.6f}")
         with open(label_path, "w") as f:
             f.write("\n".join(lines))
