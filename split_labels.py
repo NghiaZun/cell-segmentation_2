@@ -1,3 +1,37 @@
+import os
+import pandas as pd
+import numpy as np
+import glob
+
+# Map class name to class id
+CLASS_MAP = {'shsy5y': 0, 'astro': 1, 'cort': 2}
+
+def rle_decode(mask_rle, shape=(520, 704)):
+    s = mask_rle.split()
+    starts, lengths = [np.asarray(x, dtype=int) for x in (s[0:][::2], s[1:][::2])]
+    starts -= 1
+    ends = starts + lengths
+    img = np.zeros(shape[0]*shape[1], dtype=np.uint8)
+    for lo, hi in zip(starts, ends):
+        img[lo:hi] = 1
+    return img.reshape(shape)
+
+def mask_to_bbox(mask):
+    y, x = np.where(mask)
+    if len(x) == 0 or len(y) == 0:
+        return None
+    x_min, x_max = x.min(), x.max()
+    y_min, y_max = y.min(), y.max()
+    return x_min, y_min, x_max, y_max
+
+def bbox_to_yolo(bbox, img_shape):
+    x_min, y_min, x_max, y_max = bbox
+    x_center = (x_min + x_max) / 2 / img_shape[1]
+    y_center = (y_min + y_max) / 2 / img_shape[0]
+    width = (x_max - x_min) / img_shape[1]
+    height = (y_max - y_min) / img_shape[0]
+    return x_center, y_center, width, height
+
 def convert(csv_path, label_dir, image_ids=None):
     os.makedirs(label_dir, exist_ok=True)
     df = pd.read_csv(csv_path)
@@ -17,14 +51,14 @@ def convert(csv_path, label_dir, image_ids=None):
         with open(label_path, "w") as f:
             f.write("\n".join(lines))
 
-# Ví dụ dùng cho train:
-import glob
-
+# Tạo label cho train
 train_img_dir = "/kaggle/input/celsegmentation/archive/data/train/img"
+train_label_dir = "/kaggle/working/train/labels"
 train_image_ids = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(f"{train_img_dir}/*.png")]
-convert("/kaggle/input/celsegmentation/train.csv", "/kaggle/working/train/labels", train_image_ids)
+convert("/kaggle/input/celsegmentation/train.csv", train_label_dir, train_image_ids)
 
-# Tương tự cho val:
+# Tạo label cho val
 val_img_dir = "/kaggle/input/celsegmentation/archive/data/val/img"
+val_label_dir = "/kaggle/working/val/labels"
 val_image_ids = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(f"{val_img_dir}/*.png")]
-convert("/kaggle/input/celsegmentation/train.csv", "/kaggle/working/val/labels", val_image_ids)
+convert("/kaggle/input/celsegmentation/train.csv", val_label_dir, val_image_ids)
