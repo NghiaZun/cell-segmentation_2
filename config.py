@@ -1,9 +1,9 @@
 # Config file for cell segmentation/classification pipeline
 
 # Paths
-IMAGES_DIR = "images"
-LABELS_DIR = "labels_yolo"
-CSV_PATH = "train.csv"
+IMAGES_DIR = "/kaggle/input/celsegmentation/archive/archive/images"
+LABELS_DIR = "/kaggle/input/celsegmentation/archive/archive/labels"
+CSV_PATH = "/kaggle/input/celsegmentation/train.csv"
 MODEL_DIR = "models"
 YOLO_WEIGHTS = "models/yolov8n.pt"
 MASK_RCNN_WEIGHTS = "models/mask_rcnn.pth"
