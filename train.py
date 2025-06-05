@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 from models.mask_rcnn import MaskRCNNDetector
 from dataloader import SartoriusDataset
-from config import IMAGES_DIR, CSV_PATH, BATCH_SIZE, EPOCHS, LEARNING_RATE, DEVICE, NUM_CLASSES, CLASS_NAMES, MASK_RCNN_WEIGHTS
+from config import TRAIN_IMAGES_DIR,VAL_IMAGES_DIR, CSV_PATH, BATCH_SIZE, EPOCHS, LEARNING_RATE, DEVICE, NUM_CLASSES, CLASS_NAMES, MASK_RCNN_WEIGHTS
 
 def collate_fn(batch):
     return tuple(zip(*batch))
