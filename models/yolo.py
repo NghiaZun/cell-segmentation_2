@@ -2,7 +2,7 @@ from ultralytics import YOLO
 from config import YOLO_WEIGHTS, DEVICE
 
 class YOLODetector:
-    def __init__(self, model_path='yolov8n.pt', device='cpu'):
+    def __init__(self, model_path='best_yolov8.pt', device='cpu'):
         self.model = YOLO(model_path)
         self.device = device
 

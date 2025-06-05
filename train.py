@@ -20,8 +20,8 @@ def train_mask_rcnn():
             targets = []
             for i in range(len(images)):
                 target = {
-                    "boxes": ...,   # Tạo bounding box từ mask
-                    "labels": ...,  # Chuyển label sang số
+                    "boxes": torch.as_tensor(bboxes, dtype=torch.float32),   # Tạo bounding box từ mask
+                    "labels": torch.as_tensor([CLASS_MAP[l] for l in labels[i]], dtype=torch.int64),  # Chuyển label sang số
                     "masks": torch.as_tensor(masks[i], dtype=torch.uint8)
                 }
                 targets.append(target)
