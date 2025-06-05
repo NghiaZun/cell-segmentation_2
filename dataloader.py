@@ -41,7 +41,7 @@ class SartoriusDataset(Dataset):
         labels = []
         if os.path.exists(self.label_path):
             label_path = os.path.join(self.label_path, f"{image_id}.txt")
-            with open(self.label_path, 'r') as f:
+            with open(label_path, 'r') as f:
                 for line in f:
                     parts = line.strip().split()
                     class_id = int(parts[0])
