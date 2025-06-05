@@ -29,6 +29,8 @@ class SartoriusDataset(Dataset):
 
     def __getitem__(self, idx):
         image_id = self.image_ids[idx]
+        print(self.images_dir)
+        print(image_id)
         image_path = os.path.join(self.images_dir, f"{image_id}.png")
         image = cv2.imread(image_path, cv2.IMREAD_COLOR)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
