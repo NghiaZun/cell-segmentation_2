@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 from models.mask_rcnn import MaskRCNNDetector
 from dataloader import SartoriusDataset
-from config import IMAGES_DIR, CSV_PATH, BATCH_SIZE, EPOCHS, LEARNING_RATE, DEVICE, NUM_CLASSES, CLASS_MAP, MASK_RCNN_WEIGHTS
+from config import IMAGES_DIR, CSV_PATH, BATCH_SIZE, EPOCHS, LEARNING_RATE, DEVICE, NUM_CLASSES, CLASS_NAMES, MASK_RCNN_WEIGHTS
 
 def collate_fn(batch):
     return tuple(zip(*batch))
@@ -21,7 +21,7 @@ def train_mask_rcnn():
             for i in range(len(images)):
                 target = {
                     "boxes": torch.as_tensor(bboxes, dtype=torch.float32),   # Tạo bounding box từ mask
-                    "labels": torch.as_tensor([CLASS_MAP[l] for l in labels[i]], dtype=torch.int64),  # Chuyển label sang số
+                    "labels": torch.as_tensor([CLASS_NAMES[l] for l in labels[i]], dtype=torch.int64),  # Chuyển label sang số
                     "masks": torch.as_tensor(masks[i], dtype=torch.uint8)
                 }
                 targets.append(target)
