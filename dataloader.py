@@ -6,8 +6,8 @@ from torch.utils.data import Dataset
 
 class SartoriusDataset(Dataset):
     def __init__(self, images_dir, csv_path, transforms=None):
-        self.images_dir = IMAGES_DIR
-        self.df = pd.read_csv(CSV_PATH)
+        self.images_dir = images_dir
+        self.df = pd.read_csv(csv_path)
         self.image_ids = self.df['id'].unique()
         self.transforms = transforms
 
