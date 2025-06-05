@@ -5,10 +5,13 @@ import pandas as pd
 from torch.utils.data import Dataset
 
 class SartoriusDataset(Dataset):
-    def __init__(self, images_dir, csv_path, transforms=None):
+    def __init__(self, images_dir, csv_path, image_ids=None, transforms=None):
         self.images_dir = images_dir
         self.df = pd.read_csv(csv_path)
-        self.image_ids = self.df['id'].unique()
+        if image_ids is not None:
+            self.image_ids = image_ids
+        else:
+            self.image_ids = self.df['id'].unique()
         self.transforms = transforms
 
     def __len__(self):
