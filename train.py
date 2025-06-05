@@ -28,8 +28,8 @@ def train_mask_rcnn():
             for i in range(len(images)):
                 # ...tạo bboxes từ masks ở đây...
                 target = {
-                    "boxes": torch.as_tensor(bboxes, dtype=torch.float32),
-                    "labels": torch.as_tensor([CLASS_NAMES[l] for l in labels[i]], dtype=torch.int64),
+                    "boxes": torch.as_tensor(boxes_batch[i], dtype=torch.float32),
+                    "labels": torch.as_tensor(labels_batch[i] , dtype=torch.int64),
                     "masks": torch.as_tensor(masks[i], dtype=torch.uint8)
                 }
                 targets.append(target)
