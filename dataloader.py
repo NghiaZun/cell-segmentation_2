@@ -52,9 +52,4 @@ class SartoriusDataset(Dataset):
             image = augmented['image']
             masks = np.stack(augmented['masks'])
 
-        return {
-            'image': image,
-            'masks': masks,
-            'labels': labels,
-            'image_id': image_id
-        }
+            return image, masks, labels, image_id
