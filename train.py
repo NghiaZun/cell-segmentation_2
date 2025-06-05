@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 from models.mask_rcnn import MaskRCNNDetector
 from dataloader import SartoriusDataset
-from config import TRAIN_IMAGES_DIR,VAL_IMAGES_DIR, CSV_PATH, BATCH_SIZE, EPOCHS, LEARNING_RATE, DEVICE, NUM_CLASSES, CLASS_NAMES, MASK_RCNN_WEIGHTS
+from config import TRAIN_IMAGES_DIR,VAL_IMAGES_DIR,TRAIN_LABELS_DIR, VAL_LABELS_DIR, CSV_PATH, BATCH_SIZE, EPOCHS, LEARNING_RATE, DEVICE, NUM_CLASSES, CLASS_NAMES, MASK_RCNN_WEIGHTS
 import os
 
 def collate_fn(batch):
@@ -11,8 +11,8 @@ def collate_fn(batch):
 def train_mask_rcnn():
     train_image_ids = [os.path.splitext(f)[0] for f in os.listdir(TRAIN_IMAGES_DIR)]
     val_image_ids = [os.path.splitext(f)[0] for f in os.listdir(VAL_IMAGES_DIR)]
-    train_dataset = SartoriusDataset(TRAIN_IMAGES_DIR, CSV_PATH, image_ids=train_image_ids, transforms=None)
-    val_dataset = SartoriusDataset(VAL_IMAGES_DIR, CSV_PATH, image_ids=val_image_ids, transforms=None)
+    train_dataset = SartoriusDataset(TRAIN_IMAGES_DIR, CSV_PATH, TRAIN_LABELS_DIR, image_ids=train_image_ids, transforms=None)
+    val_dataset = SartoriusDataset(VAL_IMAGES_DIR, CSV_PATH, VAL_LABELS_DIR , image_ids=val_image_ids, transforms=None)
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn)
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, collate_fn=collate_fn)   
     model = MaskRCNNDetector(num_classes=NUM_CLASSES, model_path=None, device=DEVICE).model
