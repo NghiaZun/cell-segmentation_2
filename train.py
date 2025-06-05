@@ -11,7 +11,8 @@ def train_mask_rcnn():
     train_dataset = SartoriusDataset(TRAIN_IMAGES_DIR, CSV_PATH, transforms=None)
     val_dataset = SartoriusDataset(VAL_IMAGES_DIR, CSV_PATH, transforms=None)
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn)
-    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, collate_fn=collate_fn)    model = MaskRCNNDetector(num_classes=NUM_CLASSES, model_path=None, device=DEVICE).model
+    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, collate_fn=collate_fn)   
+    model = MaskRCNNDetector(num_classes=NUM_CLASSES, model_path=None, device=DEVICE).model
     model.train()
     optimizer = torch.optim.AdamW(model.parameters(), lr=LEARNING_RATE)
 
