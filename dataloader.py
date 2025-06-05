@@ -29,11 +29,15 @@ class SartoriusDataset(Dataset):
 
     def __getitem__(self, idx):
         image_id = self.image_ids[idx]
-        print(self.images_dir)
-        print(image_id)
         image_path = os.path.join(self.images_dir, f"{image_id}.png")
         image = cv2.imread(image_path, cv2.IMREAD_COLOR)
+        if image is None:
+            raise FileNotFoundError(f"Không tìm thấy ảnh: {image_path}")
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+        print("images_dir:", self.images_dir)
+        print("image_id:", image_id)
+        print("image_path:", image_path)
 
         masks = []
         labels = []
