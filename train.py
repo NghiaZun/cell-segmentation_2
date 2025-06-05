@@ -8,20 +8,24 @@ def collate_fn(batch):
     return tuple(zip(*batch))
 
 def train_mask_rcnn():
-    dataset = SartoriusDataset(IMAGES_DIR, CSV_PATH, transforms=None)
-    dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn)
-    model = MaskRCNNDetector(num_classes=NUM_CLASSES, model_path=None, device=DEVICE).model
+    train_dataset = SartoriusDataset(TRAIN_IMAGES_DIR, CSV_PATH, transforms=None)
+    val_dataset = SartoriusDataset(VAL_IMAGES_DIR, CSV_PATH, transforms=None)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn)
+    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, collate_fn=collate_fn)    model = MaskRCNNDetector(num_classes=NUM_CLASSES, model_path=None, device=DEVICE).model
     model.train()
     optimizer = torch.optim.AdamW(model.parameters(), lr=LEARNING_RATE)
 
     for epoch in range(EPOCHS):
-        for images, masks, labels, image_ids in dataloader:
+        # Train loop
+        model.train()
+        for images, masks, labels, image_ids in train_loader:
             images = [torch.as_tensor(img, dtype=torch.float32).permute(2,0,1)/255. for img in images]
             targets = []
             for i in range(len(images)):
+                # ...tạo bboxes từ masks ở đây...
                 target = {
-                    "boxes": torch.as_tensor(bboxes, dtype=torch.float32),   # Tạo bounding box từ mask
-                    "labels": torch.as_tensor([CLASS_NAMES[l] for l in labels[i]], dtype=torch.int64),  # Chuyển label sang số
+                    "boxes": torch.as_tensor(bboxes, dtype=torch.float32),
+                    "labels": torch.as_tensor([CLASS_NAMES[l] for l in labels[i]], dtype=torch.int64),
                     "masks": torch.as_tensor(masks[i], dtype=torch.uint8)
                 }
                 targets.append(target)
@@ -30,7 +34,28 @@ def train_mask_rcnn():
             optimizer.zero_grad()
             losses.backward()
             optimizer.step()
-        print(f"Epoch {epoch+1}/{EPOCHS}, Loss: {losses.item()}")
+        print(f"Epoch {epoch+1}/{EPOCHS}, Train Loss: {losses.item()}")
+
+        # Validation loop
+        model.eval()
+        val_loss = 0
+        with torch.no_grad():
+            for images, masks, labels, image_ids in val_loader:
+                images = [torch.as_tensor(img, dtype=torch.float32).permute(2,0,1)/255. for img in images]
+                targets = []
+                for i in range(len(images)):
+                    # ...tạo bboxes từ masks ở đây...
+                    target = {
+                        "boxes": torch.as_tensor(bboxes, dtype=torch.float32),
+                        "labels": torch.as_tensor([CLASS_NAMES[l] for l in labels[i]], dtype=torch.int64),
+                        "masks": torch.as_tensor(masks[i], dtype=torch.uint8)
+                    }
+                    targets.append(target)
+                loss_dict = model(images, targets)
+                val_loss += sum(loss for loss in loss_dict.values()).item()
+        val_loss /= len(val_loader)
+        print(f"Epoch {epoch+1}/{EPOCHS}, Val Loss: {val_loss:.4f}")
+
         torch.save(model.state_dict(), MASK_RCNN_WEIGHTS)
 
 if __name__ == "__main__":
