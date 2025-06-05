@@ -22,15 +22,15 @@ def train_mask_rcnn():
     for epoch in range(EPOCHS):
         # Train loop
         model.train()
-        for images, masks, labels, image_ids in train_loader:
+        for images, boxes, labels, image_ids in train_loader:
             images = [torch.as_tensor(img, dtype=torch.float32).permute(2,0,1)/255. for img in images]
             targets = []
             for i in range(len(images)):
                 # ...tạo bboxes từ masks ở đây...
                 target = {
-                    "boxes": torch.as_tensor(boxes_batch[i], dtype=torch.float32),
-                    "labels": torch.as_tensor(labels_batch[i] , dtype=torch.int64),
-                    "masks": torch.as_tensor(masks[i], dtype=torch.uint8)
+                    "boxes": torch.as_tensor(boxes[i], dtype=torch.float32),
+                    "labels": torch.as_tensor(labels[i] , dtype=torch.int64),
+                    #"masks": torch.as_tensor(masks[i], dtype=torch.uint8)
                 }
                 targets.append(target)
             loss_dict = model(images, targets)
