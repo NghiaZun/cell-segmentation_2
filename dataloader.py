@@ -3,10 +3,9 @@ import cv2
 import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
-from config import IMAGES_DIR, CSV_PATH
 
 class SartoriusDataset(Dataset):
-    def __init__(self, transforms=None):
+    def __init__(self, images_dir, csv_path, transforms=None):
         self.images_dir = IMAGES_DIR
         self.df = pd.read_csv(CSV_PATH)
         self.image_ids = self.df['id'].unique()
