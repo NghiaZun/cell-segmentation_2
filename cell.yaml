@@ -1,5 +1,4 @@
-path: /kaggle/input/celsegmentation/archive/data
-train: /train/img
-val: /val/img
+train: /kaggle/input/celsegmentation/archive/data/train/img
+val: /kaggle/input/celsegmentation/archive/data/val/img
 nc: 3
 names: ['shsy5y', 'astro', 'cort']
